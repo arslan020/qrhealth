@@ -5,8 +5,8 @@ import FlowerWatermark from "@/components/FlowerWatermark";
 export default function PriceList() {
   return (
     <section id="pricing" className="relative overflow-hidden bg-warm-grey">
-      <FlowerWatermark className="-right-20 -top-20 h-72 w-72 text-sage/10 sm:h-96 sm:w-96" />
-      <FlowerWatermark className="-bottom-24 -left-24 h-72 w-72 text-sage/10 sm:h-96 sm:w-96" />
+      <FlowerWatermark className="-right-20 -top-20 h-72 w-72 sm:h-96 sm:w-96" />
+      <FlowerWatermark className="-bottom-24 -left-24 h-72 w-72 sm:h-96 sm:w-96" />
       <div className="relative mx-auto max-w-3xl px-6 py-20">
         <Reveal>
           <h2 className="text-center text-2xl font-semibold text-dark-sage sm:text-3xl">
