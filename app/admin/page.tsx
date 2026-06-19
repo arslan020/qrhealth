@@ -105,16 +105,16 @@ export default function AdminDashboardPage() {
   return (
     <main className="min-h-screen bg-warm-grey pb-24">
       <header className="sticky top-0 z-10 border-b border-soft-green bg-warm-grey/95 backdrop-blur">
-        <div className="mx-auto flex max-w-3xl items-center justify-between px-6 py-4">
+        <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-y-2 px-4 py-3 sm:px-6 sm:py-4">
           <Logo />
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 sm:gap-3">
             <a href="/" target="_blank" rel="noreferrer" className="text-sm font-medium text-dark-sage transition hover:text-sage">
               View site ↗
             </a>
             <button
               type="button"
               onClick={handleLogout}
-              className="rounded-full border border-soft-green px-4 py-2 text-sm font-semibold text-dark-sage transition hover:bg-soft-green"
+              className="rounded-full border border-soft-green px-3 py-2 text-sm font-semibold text-dark-sage transition hover:bg-soft-green sm:px-4"
             >
               Log out
             </button>
@@ -122,7 +122,7 @@ export default function AdminDashboardPage() {
         </div>
       </header>
 
-      <div className="mx-auto max-w-3xl space-y-6 px-6 py-8">
+      <div className="mx-auto max-w-6xl space-y-6 px-6 py-8">
         {!storageConfigured && (
           <p className="rounded-xl bg-amber-50 px-4 py-3 text-sm text-amber-800">
             Storage isn&apos;t connected yet, so changes can&apos;t be saved. Ask your developer to connect a
@@ -250,7 +250,7 @@ export default function AdminDashboardPage() {
         </Section>
 
         <Section title="Conditions We Treat" description="The list of conditions shown on the homepage.">
-          <div className="space-y-2">
+          <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
             {content.conditions.map((condition, i) => (
               <div key={i} className="flex gap-2">
                 <input
@@ -404,7 +404,7 @@ export default function AdminDashboardPage() {
       </div>
 
       <div className="fixed inset-x-0 bottom-0 z-10 border-t border-soft-green bg-white/95 backdrop-blur">
-        <div className="mx-auto flex max-w-3xl items-center justify-between gap-4 px-6 py-4">
+        <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-6 py-4">
           {status ? (
             <p className={`text-sm ${status.type === "ok" ? "text-sage" : "text-red-600"}`}>{status.message}</p>
           ) : (
