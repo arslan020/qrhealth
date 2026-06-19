@@ -40,14 +40,16 @@ export default function Conditions() {
           </div>
         </Reveal>
 
-        <Reveal>
-          <p className="mt-10 text-center text-sm text-white/80">
-            Have a condition not listed?{" "}
-            <a href="#book" className="font-semibold text-white underline hover:text-light-sage">
-              Get in touch
-            </a>{" "}
-            — many issues respond well to a bespoke treatment plan.
+        <Reveal className="mt-10 text-center">
+          <p className="text-sm text-white/80">
+            Have a condition not listed? Many issues respond well to a bespoke treatment plan.
           </p>
+          <a
+            href="#contact"
+            className="mt-5 inline-block rounded-full bg-white px-8 py-3 text-sm font-semibold text-dark-sage transition hover:bg-warm-grey"
+          >
+            Get in touch
+          </a>
         </Reveal>
       </div>
     </section>

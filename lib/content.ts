@@ -122,9 +122,9 @@ export const CALENDLY_URL = "https://calendly.com/your-qr-health-link";
 
 // TODO: replace the remaining placeholders below with the client's real details.
 export const CONTACT = {
-  phone: "[Phone number]",
+  phone: "+44 7597 773444",
   email: "info@qrhealth.co.uk",
-  address: "[Clinic address]",
+  address: "West London",
   hours: "[Opening hours]",
   instagram: "#",
   facebook: "#",
