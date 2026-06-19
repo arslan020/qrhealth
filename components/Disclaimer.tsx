@@ -1,7 +1,10 @@
-import { DISCLAIMER } from "@/lib/content";
 import Reveal from "@/components/Reveal";
 
-export default function Disclaimer() {
+type DisclaimerProps = {
+  disclaimer: string;
+};
+
+export default function Disclaimer({ disclaimer }: DisclaimerProps) {
   return (
     <section className="bg-warm-grey">
       <div className="mx-auto max-w-3xl px-6 py-16">
@@ -23,7 +26,7 @@ export default function Disclaimer() {
             <h3 className="text-sm font-semibold uppercase tracking-wide text-dark-sage">
               Disclaimer
             </h3>
-            <p className="mt-2 text-sm leading-relaxed text-dark-sage/80">{DISCLAIMER}</p>
+            <p className="mt-2 text-sm leading-relaxed text-dark-sage/80">{disclaimer}</p>
           </div>
         </Reveal>
       </div>

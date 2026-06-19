@@ -1,4 +1,4 @@
-import { SITE } from "@/lib/content";
+import type { SiteContent } from "@/lib/content";
 import Reveal from "@/components/Reveal";
 import FlowerWatermark from "@/components/FlowerWatermark";
 
@@ -8,7 +8,11 @@ const HIGHLIGHTS = [
   { title: "Bespoke Treatment Plans", desc: "Every session is built around your symptoms and goals." },
 ];
 
-export default function Hero() {
+type HeroProps = {
+  site: SiteContent["site"];
+};
+
+export default function Hero({ site }: HeroProps) {
   return (
     <section id="home" className="relative flex min-h-[calc(100vh-75px)] min-h-[calc(100dvh-75px)] items-center overflow-hidden bg-gradient-to-br from-sage to-dark-sage">
       <FlowerWatermark className="-right-24 -top-24 h-[28rem] w-[28rem] sm:h-[36rem] sm:w-[36rem]" />
@@ -17,13 +21,13 @@ export default function Hero() {
       <div className="relative mx-auto max-w-5xl px-6 py-16 text-center">
         <Reveal>
           <h1 className="text-4xl font-semibold text-white sm:text-5xl">
-            {SITE.tagline}
+            {site.tagline}
           </h1>
         </Reveal>
         <Reveal delayMs={150}>
           <div className="mx-auto mt-6 max-w-xl space-y-4">
-            {SITE.welcomeParagraphs.map((para) => (
-              <p key={para} className="text-base leading-relaxed text-white/90 sm:text-lg">
+            {site.welcomeParagraphs.map((para, i) => (
+              <p key={i} className="text-base leading-relaxed text-white/90 sm:text-lg">
                 {para}
               </p>
             ))}

@@ -8,22 +8,27 @@ import Booking from "@/components/Booking";
 import Contact from "@/components/Contact";
 import Disclaimer from "@/components/Disclaimer";
 import Footer from "@/components/Footer";
+import { getContent } from "@/lib/store";
 
-export default function Home() {
+export const revalidate = 0;
+
+export default async function Home() {
+  const content = await getContent();
+
   return (
     <>
       <Header />
       <main>
-        <Hero />
-        <Therapies />
-        <Conditions />
-        <PriceList />
+        <Hero site={content.site} />
+        <Therapies therapies={content.therapies} />
+        <Conditions conditions={content.conditions} />
+        <PriceList priceList={content.priceList} />
         <Booking />
         <PhotoBreak />
-        <Contact />
-        <Disclaimer />
+        <Contact contact={content.contact} />
+        <Disclaimer disclaimer={content.disclaimer} />
       </main>
-      <Footer />
+      <Footer site={content.site} contact={content.contact} />
     </>
   );
 }

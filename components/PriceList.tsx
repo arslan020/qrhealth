@@ -1,8 +1,12 @@
-import { PRICE_LIST } from "@/lib/content";
+import type { PriceRow } from "@/lib/content";
 import Reveal from "@/components/Reveal";
 import FlowerWatermark from "@/components/FlowerWatermark";
 
-export default function PriceList() {
+type PriceListProps = {
+  priceList: PriceRow[];
+};
+
+export default function PriceList({ priceList }: PriceListProps) {
   return (
     <section id="pricing" className="relative overflow-hidden bg-warm-grey">
       <FlowerWatermark className="-right-20 -top-20 h-72 w-72 sm:h-96 sm:w-96" />
@@ -24,9 +28,9 @@ export default function PriceList() {
               </tr>
             </thead>
             <tbody>
-              {PRICE_LIST.map((row, i) => (
+              {priceList.map((row, i) => (
                 <tr
-                  key={row.treatment}
+                  key={i}
                   className={`group cursor-default transition-colors duration-200 hover:bg-sage/10 ${
                     i % 2 === 1 ? "bg-soft-green/40" : ""
                   }`}
@@ -46,9 +50,9 @@ export default function PriceList() {
           </table>
 
           <div className="divide-y divide-soft-green sm:hidden">
-            {PRICE_LIST.map((row) => (
+            {priceList.map((row, i) => (
               <div
-                key={row.treatment}
+                key={i}
                 className="group flex items-center justify-between gap-4 px-5 py-4 transition-colors duration-200 hover:bg-sage/10"
               >
                 <div>

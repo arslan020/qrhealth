@@ -1,9 +1,13 @@
-import { THERAPIES } from "@/lib/content";
+import type { Therapy } from "@/lib/content";
 import TherapyIcon from "@/components/icons/TherapyIcon";
 import Reveal from "@/components/Reveal";
 import FlowerWatermark from "@/components/FlowerWatermark";
 
-export default function Therapies() {
+type TherapiesProps = {
+  therapies: Therapy[];
+};
+
+export default function Therapies({ therapies }: TherapiesProps) {
   return (
     <section id="therapies" className="relative overflow-hidden bg-warm-grey">
       <FlowerWatermark className="-right-20 -top-20 h-72 w-72 sm:h-96 sm:w-96" />
@@ -15,11 +19,11 @@ export default function Therapies() {
           </h2>
         </Reveal>
         <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {THERAPIES.map((therapy, i) => (
+          {therapies.map((therapy, i) => (
             <Reveal
-              key={therapy.name}
+              key={i}
               delayMs={(i % 3) * 100}
-              className={i === THERAPIES.length - 1 ? "lg:col-start-2" : ""}
+              className={i === therapies.length - 1 ? "lg:col-start-2" : ""}
             >
               <div className="group relative h-full overflow-hidden rounded-2xl bg-white p-6 shadow-sm ring-1 ring-soft-green transition-all duration-300 hover:z-10 hover:scale-105 hover:shadow-xl hover:ring-sage/40">
                 <div className="absolute inset-0 scale-95 opacity-0 transition-all duration-300 group-hover:scale-100 group-hover:opacity-100">

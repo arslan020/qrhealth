@@ -1,8 +1,11 @@
-import { CONDITIONS } from "@/lib/content";
 import Reveal from "@/components/Reveal";
 import FlowerWatermark from "@/components/FlowerWatermark";
 
-export default function Conditions() {
+type ConditionsProps = {
+  conditions: string[];
+};
+
+export default function Conditions({ conditions }: ConditionsProps) {
   return (
     <section id="conditions" className="relative overflow-hidden border-t border-white/15 bg-dark-sage">
       <FlowerWatermark className="-right-20 -top-20 h-72 w-72 sm:h-96 sm:w-96" />
@@ -19,8 +22,8 @@ export default function Conditions() {
           className="mt-10 rounded-3xl border border-white/15 bg-white/5 p-8 backdrop-blur-sm sm:p-10"
         >
           <div className="columns-1 gap-x-10 sm:columns-2 lg:columns-3">
-            {CONDITIONS.map((condition, i) => (
-              <Reveal key={condition} delayMs={Math.min(i, 14) * 40}>
+            {conditions.map((condition, i) => (
+              <Reveal key={i} delayMs={Math.min(i, 14) * 40}>
                 <div className="group -mx-3 mb-4 flex items-start gap-3 rounded-lg px-3 py-1.5 text-sm text-white/85 transition-all duration-200 hover:translate-x-1 hover:bg-white/15 hover:text-white hover:shadow-md">
                   <svg
                     viewBox="0 0 24 24"

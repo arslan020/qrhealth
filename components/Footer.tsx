@@ -1,6 +1,6 @@
 import Logo from "@/components/icons/Logo";
 import Reveal from "@/components/Reveal";
-import { CONTACT, NAV_LINKS, SITE } from "@/lib/content";
+import { NAV_LINKS, type SiteContent } from "@/lib/content";
 
 function InstagramIcon() {
   return (
@@ -55,7 +55,12 @@ function ClockIcon() {
   );
 }
 
-export default function Footer() {
+type FooterProps = {
+  site: SiteContent["site"];
+  contact: SiteContent["contact"];
+};
+
+export default function Footer({ site, contact }: FooterProps) {
   return (
     <footer className="bg-dark-sage text-warm-grey">
       <div className="mx-auto max-w-6xl px-6 py-12">
@@ -64,24 +69,24 @@ export default function Footer() {
             <div className="group inline-block">
               <Logo wordmarkClassName="text-warm-grey" markClassName="transition-transform duration-300 group-hover:rotate-12" />
             </div>
-            <p className="mt-4 text-sm leading-relaxed text-warm-grey/80">{SITE.tagline}</p>
+            <p className="mt-4 text-sm leading-relaxed text-warm-grey/80">{site.tagline}</p>
             <div className="mt-4 flex justify-start gap-3">
               <a
-                href={CONTACT.instagram}
+                href={contact.instagram}
                 aria-label="Instagram"
                 className="flex h-9 w-9 items-center justify-center rounded-full bg-warm-grey/10 text-warm-grey/90 transition-all duration-300 hover:scale-110 hover:bg-light-sage hover:text-dark-sage"
               >
                 <InstagramIcon />
               </a>
               <a
-                href={CONTACT.facebook}
+                href={contact.facebook}
                 aria-label="Facebook"
                 className="flex h-9 w-9 items-center justify-center rounded-full bg-warm-grey/10 text-warm-grey/90 transition-all duration-300 hover:scale-110 hover:bg-light-sage hover:text-dark-sage"
               >
                 <FacebookIcon />
               </a>
               <a
-                href={`mailto:${CONTACT.email}`}
+                href={`mailto:${contact.email}`}
                 aria-label="Email"
                 className="flex h-9 w-9 items-center justify-center rounded-full bg-warm-grey/10 text-warm-grey/90 transition-all duration-300 hover:scale-110 hover:bg-light-sage hover:text-dark-sage"
               >
@@ -115,24 +120,24 @@ export default function Footer() {
             <ul className="mt-4 space-y-2 text-sm text-warm-grey/90">
               <li className="flex items-start gap-2">
                 <LocationIcon />
-                <span className="break-words">{CONTACT.address}</span>
+                <span className="break-words">{contact.address}</span>
               </li>
               <li className="flex items-start gap-2">
                 <PhoneIcon />
-                <span className="break-words">{CONTACT.phone}</span>
+                <span className="break-words">{contact.phone}</span>
               </li>
               <li className="flex items-start gap-2">
                 <MailIcon />
                 <a
-                  href={`mailto:${CONTACT.email}`}
+                  href={`mailto:${contact.email}`}
                   className="break-words transition-colors duration-200 hover:text-light-sage"
                 >
-                  {CONTACT.email}
+                  {contact.email}
                 </a>
               </li>
               <li className="flex items-start gap-2">
                 <ClockIcon />
-                <span className="break-words">{CONTACT.hours}</span>
+                <span className="break-words">{contact.hours}</span>
               </li>
             </ul>
           </Reveal>
@@ -140,7 +145,7 @@ export default function Footer() {
 
         <div className="mt-10 border-t border-warm-grey/20 pt-6 text-center">
           <p className="text-xs text-warm-grey/60">
-            © {new Date().getFullYear()} {SITE.name}. All rights reserved.
+            © {new Date().getFullYear()} {site.name}. All rights reserved.
           </p>
         </div>
       </div>

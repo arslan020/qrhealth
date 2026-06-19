@@ -1,14 +1,18 @@
 "use client";
 
 import { useState } from "react";
-import { CONTACT } from "@/lib/content";
+import type { SiteContent } from "@/lib/content";
 import Reveal from "@/components/Reveal";
 import FlowerWatermark from "@/components/FlowerWatermark";
 
 const fieldClass =
   "mt-1 w-full border-b border-white/30 bg-transparent py-2 text-sm text-white outline-none transition-colors duration-200 focus:border-light-sage";
 
-export default function Contact() {
+type ContactProps = {
+  contact: SiteContent["contact"];
+};
+
+export default function Contact({ contact }: ContactProps) {
   const [sent, setSent] = useState(false);
 
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -32,7 +36,7 @@ export default function Contact() {
       .filter((line) => line !== null)
       .join("\n");
 
-    window.location.href = `mailto:${CONTACT.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    window.location.href = `mailto:${contact.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
     setSent(true);
   }
 
@@ -57,13 +61,13 @@ export default function Contact() {
         <Reveal delayMs={300} className="mt-12 grid gap-12 sm:grid-cols-2">
           <div className="space-y-4 text-sm text-white">
             <p className="font-semibold uppercase tracking-wide text-white/60">Visit or reach us</p>
-            <p className="text-white/85">{CONTACT.address}</p>
-            <p className="text-white/85">{CONTACT.phone}</p>
+            <p className="text-white/85">{contact.address}</p>
+            <p className="text-white/85">{contact.phone}</p>
             <a
-              href={`mailto:${CONTACT.email}`}
+              href={`mailto:${contact.email}`}
               className="group inline-block font-medium text-light-sage transition-colors hover:text-white"
             >
-              {CONTACT.email}
+              {contact.email}
               <span className="block h-px max-w-0 bg-light-sage transition-all duration-300 group-hover:max-w-full" />
             </a>
           </div>
