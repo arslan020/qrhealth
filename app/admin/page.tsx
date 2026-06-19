@@ -30,6 +30,48 @@ function RemoveButton({ onClick, label }: { onClick: () => void; label: string }
   );
 }
 
+function ImageUpload({
+  imageUrl,
+  uploading,
+  onUpload,
+  onClear,
+  clearLabel,
+}: {
+  imageUrl: string;
+  uploading: boolean;
+  onUpload: (file: File) => void;
+  onClear?: () => void;
+  clearLabel?: string;
+}) {
+  return (
+    <div className="flex items-center gap-3">
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img src={imageUrl} alt="" className="h-16 w-16 flex-shrink-0 rounded-lg object-cover ring-1 ring-soft-green" />
+      <div className="flex flex-col items-start gap-1">
+        <label className="cursor-pointer rounded-full border border-sage px-3 py-1.5 text-xs font-semibold text-sage transition hover:bg-sage hover:text-white">
+          {uploading ? "Uploading…" : "Upload photo"}
+          <input
+            type="file"
+            accept="image/png,image/jpeg,image/webp,image/avif,image/gif"
+            className="hidden"
+            disabled={uploading}
+            onChange={(e) => {
+              const file = e.target.files?.[0];
+              if (file) onUpload(file);
+              e.target.value = "";
+            }}
+          />
+        </label>
+        {onClear && (
+          <button type="button" onClick={onClear} className="text-xs text-dark-sage/60 underline hover:text-dark-sage">
+            {clearLabel || "Remove custom photo"}
+          </button>
+        )}
+      </div>
+    </div>
+  );
+}
+
 function Section({ title, description, children }: { title: string; description?: string; children: React.ReactNode }) {
   return (
     <section className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-soft-green sm:p-8">
@@ -44,7 +86,7 @@ const inputClass =
   "w-full rounded-lg border border-soft-green px-3 py-2 text-sm text-dark-sage outline-none transition-colors focus:border-sage";
 const labelClass = "text-sm font-medium text-dark-sage";
 const addButtonClass =
-  "rounded-full border border-sage px-4 py-2 text-sm font-semibold text-sage transition hover:bg-sage hover:text-white";
+  "rounded-full bg-sage px-4 py-2 text-sm font-semibold text-white transition hover:bg-dark-sage";
 
 export default function AdminDashboardPage() {
   const router = useRouter();
@@ -53,6 +95,7 @@ export default function AdminDashboardPage() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [status, setStatus] = useState<{ type: "ok" | "error"; message: string } | null>(null);
+  const [uploadingKey, setUploadingKey] = useState<string | null>(null);
 
   useEffect(() => {
     fetch("/api/admin/content")
@@ -94,6 +137,48 @@ export default function AdminDashboardPage() {
     router.push("/admin/login");
   }
 
+  async function uploadImage(file: File): Promise<string> {
+    const formData = new FormData();
+    formData.append("file", file);
+    const res = await fetch("/api/admin/upload", { method: "POST", body: formData });
+    const data = await res.json().catch(() => null);
+    if (!res.ok) {
+      throw new Error(data?.error || "Upload failed.");
+    }
+    return data.url as string;
+  }
+
+  async function handleTherapyPhotoUpload(i: number, file: File) {
+    setUploadingKey(`therapy-${i}`);
+    setStatus(null);
+    try {
+      const url = await uploadImage(file);
+      setContent((prev) => {
+        if (!prev) return prev;
+        const next = [...prev.therapies];
+        next[i] = { ...next[i], photoUrl: url };
+        return { ...prev, therapies: next };
+      });
+    } catch (err) {
+      setStatus({ type: "error", message: err instanceof Error ? err.message : "Upload failed." });
+    } finally {
+      setUploadingKey(null);
+    }
+  }
+
+  async function handlePhotoBreakUpload(file: File) {
+    setUploadingKey("photoBreak");
+    setStatus(null);
+    try {
+      const url = await uploadImage(file);
+      setContent((prev) => (prev ? { ...prev, photoBreakImage: url } : prev));
+    } catch (err) {
+      setStatus({ type: "error", message: err instanceof Error ? err.message : "Upload failed." });
+    } finally {
+      setUploadingKey(null);
+    }
+  }
+
   if (loading) {
     return <main className="flex min-h-screen items-center justify-center bg-warm-grey text-dark-sage">Loading…</main>;
   }
@@ -114,7 +199,7 @@ export default function AdminDashboardPage() {
             <button
               type="button"
               onClick={handleLogout}
-              className="rounded-full border border-soft-green px-3 py-2 text-sm font-semibold text-dark-sage transition hover:bg-soft-green sm:px-4"
+              className="rounded-full bg-sage px-3 py-2 text-sm font-semibold text-white transition hover:bg-dark-sage sm:px-4"
             >
               Log out
             </button>
@@ -219,6 +304,25 @@ export default function AdminDashboardPage() {
                   label="Remove therapy"
                   onClick={() => setContent({ ...content, therapies: content.therapies.filter((_, idx) => idx !== i) })}
                 />
+              </div>
+              <div className="mt-3">
+                <label className={labelClass}>Card photo (shown on hover)</label>
+                <div className="mt-1">
+                  <ImageUpload
+                    imageUrl={therapy.photoUrl || `/images/therapies/${therapy.icon}.jpg`}
+                    uploading={uploadingKey === `therapy-${i}`}
+                    onUpload={(file) => handleTherapyPhotoUpload(i, file)}
+                    onClear={
+                      therapy.photoUrl
+                        ? () => {
+                            const next = [...content.therapies];
+                            next[i] = { ...next[i], photoUrl: undefined };
+                            setContent({ ...content, therapies: next });
+                          }
+                        : undefined
+                    }
+                  />
+                </div>
               </div>
               <div className="mt-3">
                 <label className={labelClass}>Description</label>
@@ -332,6 +436,14 @@ export default function AdminDashboardPage() {
           </button>
         </Section>
 
+        <Section title="Background Photo" description="The full-width photo shown between the Booking and Contact sections.">
+          <ImageUpload
+            imageUrl={content.photoBreakImage}
+            uploading={uploadingKey === "photoBreak"}
+            onUpload={(file) => handlePhotoBreakUpload(file)}
+          />
+        </Section>
+
         <Section title="Disclaimer">
           <textarea
             rows={4}
@@ -396,7 +508,7 @@ export default function AdminDashboardPage() {
 
         <button
           type="button"
-          className="rounded-full border border-dark-sage/30 px-4 py-2 text-sm text-dark-sage/70 transition hover:bg-soft-green"
+          className="rounded-full bg-sage px-4 py-2 text-sm font-semibold text-white transition hover:bg-dark-sage"
           onClick={() => setContent(DEFAULT_CONTENT)}
         >
           Reset all fields to defaults

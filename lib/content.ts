@@ -21,6 +21,7 @@ export type Therapy = {
   name: string;
   description: string;
   icon: TherapyIcon;
+  photoUrl?: string;
 };
 
 export type PriceRow = {
@@ -47,6 +48,7 @@ export type SiteContent = {
     instagram: string;
     facebook: string;
   };
+  photoBreakImage: string;
 };
 
 export const DEFAULT_CONTENT: SiteContent = {
@@ -149,4 +151,5 @@ export const DEFAULT_CONTENT: SiteContent = {
     instagram: "#",
     facebook: "#",
   },
+  photoBreakImage: "/images/candles-on-beige.avif",
 };

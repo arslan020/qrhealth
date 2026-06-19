@@ -24,7 +24,7 @@ export default async function Home() {
         <Conditions conditions={content.conditions} />
         <PriceList priceList={content.priceList} />
         <Booking />
-        <PhotoBreak />
+        <PhotoBreak image={content.photoBreakImage} />
         <Contact contact={content.contact} />
         <Disclaimer disclaimer={content.disclaimer} />
       </main>

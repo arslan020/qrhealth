@@ -29,7 +29,7 @@ export default function Therapies({ therapies }: TherapiesProps) {
                 <div className="absolute inset-0 scale-95 opacity-0 transition-all duration-300 group-hover:scale-100 group-hover:opacity-100">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
-                    src={`/images/therapies/${therapy.icon}.jpg`}
+                    src={therapy.photoUrl || `/images/therapies/${therapy.icon}.jpg`}
                     alt={therapy.name}
                     className="h-full w-full object-cover"
                   />
