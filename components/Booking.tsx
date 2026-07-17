@@ -25,7 +25,8 @@ export default function Booking() {
         <Reveal delayMs={300}>
           <div
             className="calendly-inline-widget mt-8"
-            data-url={CALENDLY_URL}
+            data-url={`${CALENDLY_URL}?hide_gdpr_banner=1&primary_color=7A8E6F`}
+            data-resize="true"
             style={{ minWidth: "320px", height: "700px" }}
           />
         </Reveal>
