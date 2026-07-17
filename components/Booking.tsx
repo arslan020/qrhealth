@@ -1,9 +1,8 @@
-import Reveal from "@/components/Reveal";
+"use client";
 
-// TODO: once the client has a real Calendly link, re-add the embed here:
-// "use client"; import Script from "next/script"; import { CALENDLY_URL } from "@/lib/content";
-// <div className="calendly-inline-widget" data-url={CALENDLY_URL} style={{ minWidth: "320px", height: "700px" }} />
-// <Script src="https://assets.calendly.com/assets/external/widget.js" strategy="lazyOnload" />
+import Script from "next/script";
+import Reveal from "@/components/Reveal";
+import { CALENDLY_URL } from "@/lib/content";
 
 export default function Booking() {
   return (
@@ -24,13 +23,16 @@ export default function Booking() {
         </Reveal>
 
         <Reveal delayMs={300}>
-          <a
-            href="#contact"
-            className="mx-auto mt-8 block w-fit rounded-full bg-sage px-8 py-3 text-sm font-semibold text-white transition hover:bg-dark-sage"
-          >
-            Contact Us to Book
-          </a>
+          <div
+            className="calendly-inline-widget mt-8"
+            data-url={CALENDLY_URL}
+            style={{ minWidth: "320px", height: "700px" }}
+          />
         </Reveal>
+        <Script
+          src="https://assets.calendly.com/assets/external/widget.js"
+          strategy="lazyOnload"
+        />
       </div>
     </section>
   );

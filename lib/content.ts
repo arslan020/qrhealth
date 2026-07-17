@@ -11,8 +11,7 @@ export const NAV_LINKS = [
   { label: "Contact", href: "#contact" },
 ];
 
-// TODO: replace with the client's real Calendly scheduling link once they create an account.
-export const CALENDLY_URL = "https://calendly.com/your-qr-health-link";
+export const CALENDLY_URL = "https://calendly.com/qrhealthltd";
 
 export const THERAPY_ICONS = ["needle", "point", "cup", "hand", "energy", "wave", "flame"] as const;
 export type TherapyIcon = (typeof THERAPY_ICONS)[number];
