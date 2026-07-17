@@ -10,3 +10,11 @@ html {
 body {
   color: #2f3a2b;
 }
+
+/* Calendly's widget.css caps the booking popup at 680px tall, which forces an
+   inner scrollbar with our 8 event types — let it use nearly the full screen. */
+.calendly-overlay .calendly-popup {
+  max-height: none !important;
+  height: 94vh !important;
+  max-width: 1100px !important;
+}
