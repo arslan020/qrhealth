@@ -13,31 +13,37 @@ type ContactProps = {
 };
 
 export default function Contact({ contact }: ContactProps) {
-  const [sent, setSent] = useState(false);
+  const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
 
-  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    const data = new FormData(e.currentTarget);
+    const form = e.currentTarget;
+    const data = new FormData(form);
+    if (data.get("_honey")) return; // bot trap
     const firstName = data.get("firstName")?.toString() ?? "";
     const lastName = data.get("lastName")?.toString() ?? "";
-    const email = data.get("email")?.toString() ?? "";
-    const phone = data.get("phone")?.toString() ?? "";
-    const message = data.get("message")?.toString() ?? "";
 
-    const subject = `New enquiry from ${firstName} ${lastName}`.trim();
-    const body = [
-      `Name: ${firstName} ${lastName}`,
-      `Email: ${email}`,
-      phone ? `Phone: ${phone}` : null,
-      "",
-      "Message:",
-      message,
-    ]
-      .filter((line) => line !== null)
-      .join("\n");
-
-    window.location.href = `mailto:${contact.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-    setSent(true);
+    setStatus("sending");
+    try {
+      const res = await fetch(`https://formsubmit.co/ajax/${contact.email}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        body: JSON.stringify({
+          name: `${firstName} ${lastName}`.trim(),
+          email: data.get("email")?.toString() ?? "",
+          phone: data.get("phone")?.toString() ?? "",
+          message: data.get("message")?.toString() ?? "",
+          _subject: `New enquiry from ${firstName} ${lastName}`.trim(),
+          _template: "table",
+          _captcha: "false",
+        }),
+      });
+      if (!res.ok) throw new Error("Failed to send");
+      setStatus("sent");
+      form.reset();
+    } catch {
+      setStatus("error");
+    }
   }
 
   return (
@@ -73,6 +79,7 @@ export default function Contact({ contact }: ContactProps) {
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-5">
+            <input type="text" name="_honey" tabIndex={-1} autoComplete="off" className="hidden" aria-hidden="true" />
             <div className="grid gap-5 sm:grid-cols-2">
               <div>
                 <label htmlFor="firstName" className="text-sm font-medium text-white">
@@ -111,14 +118,20 @@ export default function Contact({ contact }: ContactProps) {
 
             <button
               type="submit"
-              className="w-full rounded-full bg-white px-8 py-3 text-sm font-semibold text-dark-sage transition-all duration-300 hover:scale-[1.02] hover:bg-light-sage hover:shadow-lg"
+              disabled={status === "sending"}
+              className="w-full rounded-full bg-white px-8 py-3 text-sm font-semibold text-dark-sage transition-all duration-300 hover:scale-[1.02] hover:bg-light-sage hover:shadow-lg disabled:opacity-60"
             >
-              Submit
+              {status === "sending" ? "Sending…" : "Submit"}
             </button>
 
-            {sent && (
-              <p className="text-sm text-white/80">
-                Your email app should now open with your message ready to send.
+            {status === "sent" && (
+              <p className="text-sm text-white">
+                Thank you — your message has been sent. We&apos;ll get back to you soon.
+              </p>
+            )}
+            {status === "error" && (
+              <p className="text-sm text-red-200">
+                Sorry, something went wrong. Please try again or email us directly.
               </p>
             )}
           </form>

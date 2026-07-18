@@ -1,3 +1,6 @@
+"use client";
+
+import { useCallback, useEffect, useRef, useState } from "react";
 import type { Testimonial } from "@/lib/content";
 import Reveal from "@/components/Reveal";
 import FlowerWatermark from "@/components/FlowerWatermark";
@@ -7,7 +10,39 @@ type TestimonialsProps = {
 };
 
 export default function Testimonials({ testimonials }: TestimonialsProps) {
+  const trackRef = useRef<HTMLDivElement>(null);
+  const drag = useRef({ down: false, moved: false, startX: 0, startLeft: 0 });
+  const [dragging, setDragging] = useState(false);
+  const [canPrev, setCanPrev] = useState(false);
+  const [canNext, setCanNext] = useState(false);
+
+  const updateArrows = useCallback(() => {
+    const el = trackRef.current;
+    if (!el) return;
+    setCanPrev(el.scrollLeft > 8);
+    setCanNext(el.scrollLeft < el.scrollWidth - el.clientWidth - 8);
+  }, []);
+
+  useEffect(() => {
+    updateArrows();
+    const el = trackRef.current;
+    el?.addEventListener("scroll", updateArrows, { passive: true });
+    window.addEventListener("resize", updateArrows);
+    return () => {
+      el?.removeEventListener("scroll", updateArrows);
+      window.removeEventListener("resize", updateArrows);
+    };
+  }, [updateArrows, testimonials]);
+
   if (!testimonials || testimonials.length === 0) return null;
+
+  const scrollByCard = (dir: 1 | -1) => {
+    const el = trackRef.current;
+    if (!el) return;
+    const card = el.querySelector("figure");
+    const amount = card ? card.clientWidth + 24 : el.clientWidth;
+    el.scrollBy({ left: dir * amount, behavior: "smooth" });
+  };
 
   return (
     <section id="testimonials" className="relative overflow-hidden bg-soft-green">
@@ -20,10 +55,41 @@ export default function Testimonials({ testimonials }: TestimonialsProps) {
           </h2>
         </Reveal>
 
-        <div className="mt-10 grid gap-6 sm:grid-cols-2">
-          {testimonials.map((testimonial, i) => (
-            <Reveal key={i} delayMs={i * 100}>
-              <figure className="flex h-full flex-col rounded-2xl bg-white p-6 shadow-sm ring-1 ring-soft-green sm:p-8">
+        <Reveal delayMs={150}>
+          <div
+            ref={trackRef}
+            onPointerDown={(e) => {
+              if (e.pointerType !== "mouse") return;
+              const el = trackRef.current;
+              if (!el) return;
+              drag.current = { down: true, moved: false, startX: e.clientX, startLeft: el.scrollLeft };
+              setDragging(true);
+            }}
+            onPointerMove={(e) => {
+              if (!drag.current.down) return;
+              const el = trackRef.current;
+              if (!el) return;
+              const dx = e.clientX - drag.current.startX;
+              if (Math.abs(dx) > 3) drag.current.moved = true;
+              el.scrollLeft = drag.current.startLeft - dx;
+            }}
+            onPointerUp={() => {
+              drag.current.down = false;
+              setDragging(false);
+            }}
+            onPointerLeave={() => {
+              drag.current.down = false;
+              setDragging(false);
+            }}
+            className={`mt-10 flex gap-6 overflow-x-auto pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden ${
+              dragging ? "cursor-grabbing select-none" : "cursor-grab snap-x snap-mandatory"
+            }`}
+          >
+            {testimonials.map((testimonial, i) => (
+              <figure
+                key={i}
+                className="flex w-[85%] flex-shrink-0 snap-start flex-col rounded-2xl bg-white p-6 shadow-sm ring-1 ring-soft-green sm:w-[calc(50%-12px)] sm:p-8"
+              >
                 <svg
                   viewBox="0 0 24 24"
                   className="h-6 w-6 flex-shrink-0 text-sage"
@@ -39,9 +105,36 @@ export default function Testimonials({ testimonials }: TestimonialsProps) {
                   {testimonial.name}
                 </figcaption>
               </figure>
-            </Reveal>
-          ))}
-        </div>
+            ))}
+          </div>
+        </Reveal>
+
+        {(canPrev || canNext) && (
+          <div className="mt-6 flex justify-center gap-3">
+            <button
+              type="button"
+              aria-label="Previous testimonials"
+              onClick={() => scrollByCard(-1)}
+              disabled={!canPrev}
+              className="flex h-10 w-10 items-center justify-center rounded-full bg-sage text-white transition hover:bg-dark-sage disabled:opacity-40 disabled:hover:bg-sage"
+            >
+              <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+                <path d="M15 18l-6-6 6-6" />
+              </svg>
+            </button>
+            <button
+              type="button"
+              aria-label="Next testimonials"
+              onClick={() => scrollByCard(1)}
+              disabled={!canNext}
+              className="flex h-10 w-10 items-center justify-center rounded-full bg-sage text-white transition hover:bg-dark-sage disabled:opacity-40 disabled:hover:bg-sage"
+            >
+              <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+                <path d="M9 6l6 6-6 6" />
+              </svg>
+            </button>
+          </div>
+        )}
       </div>
     </section>
   );
