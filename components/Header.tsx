@@ -2,10 +2,20 @@
 
 import { useState } from "react";
 import Logo from "@/components/icons/Logo";
-import { NAV_LINKS } from "@/lib/content";
+import { CALENDLY_URL, NAV_LINKS } from "@/lib/content";
+
+const CALENDLY_EMBED_URL = `${CALENDLY_URL}?hide_gdpr_banner=1&primary_color=A6AB95`;
 
 export default function Header() {
   const [open, setOpen] = useState(false);
+
+  const openCalendly = () => {
+    if (window.Calendly) {
+      window.Calendly.initPopupWidget({ url: CALENDLY_EMBED_URL });
+    } else {
+      window.open(CALENDLY_URL, "_blank", "noopener");
+    }
+  };
 
   return (
     <>
@@ -15,7 +25,7 @@ export default function Header() {
             <Logo />
           </a>
 
-          <nav className="hidden items-center justify-center gap-6 lg:flex xl:gap-10">
+          <nav className="hidden items-center justify-center gap-5 lg:flex xl:gap-7">
             {NAV_LINKS.map((link) => (
               <a
                 key={link.href}
@@ -28,7 +38,13 @@ export default function Header() {
             ))}
           </nav>
 
-          <div className="hidden lg:block" />
+          <button
+            type="button"
+            onClick={openCalendly}
+            className="hidden justify-self-end rounded-full bg-sage px-5 py-2 text-sm font-semibold text-white transition hover:bg-dark-sage lg:block"
+          >
+            Book Now
+          </button>
 
           <button
             type="button"

@@ -7,7 +7,7 @@ type ConditionsProps = {
 
 export default function Conditions({ conditions }: ConditionsProps) {
   return (
-    <section id="conditions" className="relative overflow-hidden border-t border-white/15 bg-dark-sage">
+    <section id="conditions" className="relative overflow-hidden border-t border-white/15 bg-sage">
       <FlowerWatermark className="-right-20 -top-20 h-72 w-72 sm:h-96 sm:w-96" />
       <FlowerWatermark className="-bottom-24 -left-24 h-72 w-72 sm:h-96 sm:w-96" />
       <div className="relative mx-auto max-w-5xl px-6 py-20">

@@ -62,7 +62,7 @@ type FooterProps = {
 
 export default function Footer({ site, contact }: FooterProps) {
   return (
-    <footer className="bg-dark-sage text-warm-grey">
+    <footer className="bg-sage text-warm-grey">
       <div className="mx-auto max-w-6xl px-6 py-12">
         <div className="grid gap-10 sm:grid-cols-3">
           <Reveal className="min-w-0 text-left">

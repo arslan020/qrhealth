@@ -166,6 +166,19 @@ export default function AdminDashboardPage() {
     }
   }
 
+  async function handleAboutPhotoUpload(file: File) {
+    setUploadingKey("aboutPhoto");
+    setStatus(null);
+    try {
+      const url = await uploadImage(file);
+      setContent((prev) => (prev ? { ...prev, about: { ...prev.about, photoUrl: url } } : prev));
+    } catch (err) {
+      setStatus({ type: "error", message: err instanceof Error ? err.message : "Upload failed." });
+    } finally {
+      setUploadingKey(null);
+    }
+  }
+
   async function handlePhotoBreakUpload(file: File) {
     setUploadingKey("photoBreak");
     setStatus(null);
@@ -257,6 +270,86 @@ export default function AdminDashboardPage() {
                   ...content,
                   site: { ...content.site, welcomeParagraphs: [...content.site.welcomeParagraphs, ""] },
                 })
+              }
+            >
+              + Add paragraph
+            </button>
+          </div>
+        </Section>
+
+        <Section title="About Me" description="Shown between the welcome section and therapies, with your photo.">
+          <div>
+            <label className={labelClass}>Heading</label>
+            <input
+              className={`mt-1 ${inputClass}`}
+              value={content.about.heading}
+              onChange={(e) => setContent({ ...content, about: { ...content.about, heading: e.target.value } })}
+            />
+          </div>
+          <div>
+            <label className={labelClass}>Photo</label>
+            <div className="mt-1">
+              {content.about.photoUrl ? (
+                <ImageUpload
+                  imageUrl={content.about.photoUrl}
+                  uploading={uploadingKey === "aboutPhoto"}
+                  onUpload={(file) => handleAboutPhotoUpload(file)}
+                  onClear={() => setContent({ ...content, about: { ...content.about, photoUrl: "" } })}
+                  clearLabel="Remove photo"
+                />
+              ) : (
+                <label className="inline-block cursor-pointer rounded-full border border-sage px-3 py-1.5 text-xs font-semibold text-sage transition hover:bg-sage hover:text-white">
+                  {uploadingKey === "aboutPhoto" ? "Uploading…" : "Upload photo"}
+                  <input
+                    type="file"
+                    accept="image/png,image/jpeg,image/webp,image/avif,image/gif"
+                    className="hidden"
+                    disabled={uploadingKey === "aboutPhoto"}
+                    onChange={(e) => {
+                      const file = e.target.files?.[0];
+                      if (file) handleAboutPhotoUpload(file);
+                      e.target.value = "";
+                    }}
+                  />
+                </label>
+              )}
+            </div>
+            {!content.about.photoUrl && (
+              <p className="mt-1 text-xs text-dark-sage/60">
+                Until a photo is uploaded, the site shows a &quot;Photo coming soon&quot; placeholder.
+              </p>
+            )}
+          </div>
+          <div>
+            <label className={labelClass}>Paragraphs</label>
+            <div className="mt-1 space-y-3">
+              {content.about.paragraphs.map((para, i) => (
+                <div key={i} className="flex gap-2">
+                  <textarea
+                    rows={3}
+                    className={inputClass}
+                    value={para}
+                    onChange={(e) => {
+                      const next = [...content.about.paragraphs];
+                      next[i] = e.target.value;
+                      setContent({ ...content, about: { ...content.about, paragraphs: next } });
+                    }}
+                  />
+                  <RemoveButton
+                    label="Remove paragraph"
+                    onClick={() => {
+                      const next = content.about.paragraphs.filter((_, idx) => idx !== i);
+                      setContent({ ...content, about: { ...content.about, paragraphs: next } });
+                    }}
+                  />
+                </div>
+              ))}
+            </div>
+            <button
+              type="button"
+              className={`mt-3 ${addButtonClass}`}
+              onClick={() =>
+                setContent({ ...content, about: { ...content.about, paragraphs: [...content.about.paragraphs, ""] } })
               }
             >
               + Add paragraph
@@ -442,6 +535,104 @@ export default function AdminDashboardPage() {
             uploading={uploadingKey === "photoBreak"}
             onUpload={(file) => handlePhotoBreakUpload(file)}
           />
+        </Section>
+
+        <Section title="Testimonials" description="Client quotes shown after the Contact section.">
+          {(content.testimonials ?? []).map((testimonial, i) => (
+            <div key={i} className="rounded-xl border border-soft-green p-4">
+              <div className="flex items-start justify-between gap-2">
+                <div className="w-full">
+                  <label className={labelClass}>Quote</label>
+                  <textarea
+                    rows={3}
+                    className={`mt-1 ${inputClass}`}
+                    value={testimonial.quote}
+                    onChange={(e) => {
+                      const next = [...(content.testimonials ?? [])];
+                      next[i] = { ...next[i], quote: e.target.value };
+                      setContent({ ...content, testimonials: next });
+                    }}
+                  />
+                </div>
+                <RemoveButton
+                  label="Remove testimonial"
+                  onClick={() =>
+                    setContent({ ...content, testimonials: (content.testimonials ?? []).filter((_, idx) => idx !== i) })
+                  }
+                />
+              </div>
+              <div className="mt-3">
+                <label className={labelClass}>Name</label>
+                <input
+                  className={`mt-1 ${inputClass}`}
+                  value={testimonial.name}
+                  onChange={(e) => {
+                    const next = [...(content.testimonials ?? [])];
+                    next[i] = { ...next[i], name: e.target.value };
+                    setContent({ ...content, testimonials: next });
+                  }}
+                />
+              </div>
+            </div>
+          ))}
+          <button
+            type="button"
+            className={addButtonClass}
+            onClick={() =>
+              setContent({ ...content, testimonials: [...(content.testimonials ?? []), { quote: "", name: "" }] })
+            }
+          >
+            + Add testimonial
+          </button>
+        </Section>
+
+        <Section title="FAQs" description="Questions and answers shown in the FAQ section above the disclaimer.">
+          {(content.faqs ?? []).map((faq, i) => (
+            <div key={i} className="rounded-xl border border-soft-green p-4">
+              <div className="flex items-start justify-between gap-2">
+                <div className="w-full">
+                  <label className={labelClass}>Question</label>
+                  <input
+                    className={`mt-1 ${inputClass}`}
+                    value={faq.question}
+                    onChange={(e) => {
+                      const next = [...(content.faqs ?? [])];
+                      next[i] = { ...next[i], question: e.target.value };
+                      setContent({ ...content, faqs: next });
+                    }}
+                  />
+                </div>
+                <RemoveButton
+                  label="Remove FAQ"
+                  onClick={() =>
+                    setContent({ ...content, faqs: (content.faqs ?? []).filter((_, idx) => idx !== i) })
+                  }
+                />
+              </div>
+              <div className="mt-3">
+                <label className={labelClass}>Answer</label>
+                <textarea
+                  rows={3}
+                  className={`mt-1 ${inputClass}`}
+                  value={faq.answer}
+                  onChange={(e) => {
+                    const next = [...(content.faqs ?? [])];
+                    next[i] = { ...next[i], answer: e.target.value };
+                    setContent({ ...content, faqs: next });
+                  }}
+                />
+              </div>
+            </div>
+          ))}
+          <button
+            type="button"
+            className={addButtonClass}
+            onClick={() =>
+              setContent({ ...content, faqs: [...(content.faqs ?? []), { question: "", answer: "" }] })
+            }
+          >
+            + Add FAQ
+          </button>
         </Section>
 
         <Section title="Disclaimer">

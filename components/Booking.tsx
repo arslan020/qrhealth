@@ -4,7 +4,7 @@ import Script from "next/script";
 import Reveal from "@/components/Reveal";
 import { CALENDLY_URL } from "@/lib/content";
 
-const CALENDLY_EMBED_URL = `${CALENDLY_URL}?hide_gdpr_banner=1&primary_color=7A8E6F`;
+const CALENDLY_EMBED_URL = `${CALENDLY_URL}?hide_gdpr_banner=1&primary_color=A6AB95`;
 
 declare global {
   interface Window {

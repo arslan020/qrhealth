@@ -41,7 +41,7 @@ export default function Contact({ contact }: ContactProps) {
   }
 
   return (
-    <section id="contact" className="relative overflow-hidden border-t border-white/15 bg-dark-sage">
+    <section id="contact" className="relative overflow-hidden border-t border-white/15 bg-sage">
       <FlowerWatermark className="-right-20 -top-20 h-72 w-72 sm:h-96 sm:w-96" />
       <FlowerWatermark className="-bottom-24 -left-24 h-72 w-72 sm:h-96 sm:w-96" />
 
@@ -65,10 +65,10 @@ export default function Contact({ contact }: ContactProps) {
             <p className="text-white/85">{contact.phone}</p>
             <a
               href={`mailto:${contact.email}`}
-              className="group inline-block font-medium text-light-sage transition-colors hover:text-white"
+              className="group inline-block font-medium text-white transition-colors hover:text-white/80"
             >
               {contact.email}
-              <span className="block h-px max-w-0 bg-light-sage transition-all duration-300 group-hover:max-w-full" />
+              <span className="block h-px max-w-0 bg-white transition-all duration-300 group-hover:max-w-full" />
             </a>
           </div>
 

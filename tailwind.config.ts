@@ -8,7 +8,7 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        sage: "#7A8E6F",
+        sage: "#A6AB95",
         "light-sage": "#B8C880",
         "dark-sage": "#5E6E53",
         "soft-green": "#E8EDE6",

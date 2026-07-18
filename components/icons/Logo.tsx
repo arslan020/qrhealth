@@ -20,7 +20,7 @@ export default function Logo({
         className={`h-14 w-14 object-contain ${markClassName}`}
       />
       {withWordmark && (
-        <span className={`font-sans text-2xl leading-none ${wordmarkClassName}`}>
+        <span className={`whitespace-nowrap font-sans text-2xl leading-none ${wordmarkClassName}`}>
           <span className="font-semibold">QR</span>{" "}
           <span className="font-medium">Health</span>
         </span>

@@ -18,7 +18,9 @@ export async function getContent(): Promise<SiteContent> {
   const redis = getRedis();
   if (!redis) return DEFAULT_CONTENT;
   const stored = await redis.get<SiteContent>(CONTENT_KEY);
-  return stored ?? DEFAULT_CONTENT;
+  if (!stored) return DEFAULT_CONTENT;
+  // Merge so content saved before a new section existed still gets its defaults.
+  return { ...DEFAULT_CONTENT, ...stored };
 }
 
 export async function saveContent(content: SiteContent): Promise<void> {

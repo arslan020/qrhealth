@@ -14,7 +14,7 @@ type HeroProps = {
 
 export default function Hero({ site }: HeroProps) {
   return (
-    <section id="home" className="relative flex min-h-[calc(100vh-75px)] min-h-[calc(100dvh-75px)] items-center overflow-hidden bg-gradient-to-br from-sage to-dark-sage">
+    <section id="home" className="relative flex min-h-[calc(100vh-75px)] min-h-[calc(100dvh-75px)] items-center overflow-hidden bg-sage">
       <FlowerWatermark className="-right-24 -top-24 h-[28rem] w-[28rem] sm:h-[36rem] sm:w-[36rem]" />
       <FlowerWatermark className="-bottom-28 -left-28 h-[26rem] w-[26rem] sm:h-[32rem] sm:w-[32rem]" />
 

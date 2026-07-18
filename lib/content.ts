@@ -4,11 +4,12 @@
 
 export const NAV_LINKS = [
   { label: "Home", href: "#home" },
+  { label: "About", href: "#about" },
   { label: "Therapies", href: "#therapies" },
   { label: "Conditions", href: "#conditions" },
   { label: "Pricing", href: "#pricing" },
-  { label: "Book Now", href: "#book" },
   { label: "Contact", href: "#contact" },
+  { label: "FAQ", href: "#faq" },
 ];
 
 export const CALENDLY_URL = "https://calendly.com/qrhealthltd";
@@ -29,15 +30,32 @@ export type PriceRow = {
   price: string;
 };
 
+export type FaqItem = {
+  question: string;
+  answer: string;
+};
+
+export type Testimonial = {
+  quote: string;
+  name: string;
+};
+
 export type SiteContent = {
   site: {
     name: string;
     tagline: string;
     welcomeParagraphs: string[];
   };
+  about: {
+    heading: string;
+    paragraphs: string[];
+    photoUrl: string;
+  };
   therapies: Therapy[];
   conditions: string[];
   priceList: PriceRow[];
+  testimonials: Testimonial[];
+  faqs: FaqItem[];
   disclaimer: string;
   contact: {
     phone: string;
@@ -58,6 +76,14 @@ export const DEFAULT_CONTENT: SiteContent = {
       "At QR Health, ancient wisdom meets modern care. With 20 years of experience in Traditional Chinese Medicine from both the UK and China, we offer a range of holistic therapies designed to restore balance, ease pain and support your body's natural ability to heal.",
       "Every treatment plan is bespoke - built around you, your symptoms and your goal of balance and lasting wellbeing.",
     ],
+  },
+  about: {
+    heading: "About Me",
+    paragraphs: [
+      "With over 20 years of experience in Traditional Chinese Medicine, trained and practised in both the UK and China, I bring a depth of knowledge that bridges ancient wisdom and modern clinical care.",
+      "My approach is simple: listen first, treat the root cause, and build a plan that is entirely personal to you. Every person who walks through the door is different — and so is every treatment.",
+    ],
+    photoUrl: "",
   },
   therapies: [
     {
@@ -139,6 +165,35 @@ export const DEFAULT_CONTENT: SiteContent = {
     { treatment: "Reiki", duration: "40 mins", price: "£60" },
     { treatment: "Sound Therapy", duration: "40 mins", price: "£60" },
     { treatment: "Moxibustion", duration: "40 mins", price: "£60" },
+  ],
+  testimonials: [
+    {
+      quote:
+        "After months of back pain, a few sessions here made a bigger difference than anything else I'd tried. I can't recommend it enough.",
+      name: "Placeholder — replace with a real testimonial",
+    },
+    {
+      quote:
+        "The most relaxing and professional experience. I always leave feeling lighter, calmer and pain-free.",
+      name: "Placeholder — replace with a real testimonial",
+    },
+  ],
+  faqs: [
+    {
+      question: "What should I expect during my first visit?",
+      answer:
+        "Your first appointment includes a full consultation covering your medical history, symptoms and goals, followed by your treatment. Please allow a little extra time for this initial session.",
+    },
+    {
+      question: "How many sessions will I need?",
+      answer:
+        "This varies from person to person and depends on your condition. Many people notice improvement within a few sessions — your practitioner will discuss a recommended plan with you at your first visit.",
+    },
+    {
+      question: "Does acupuncture hurt?",
+      answer:
+        "The needles used are extremely fine — most people feel little more than a slight tingling sensation, and many find the treatment deeply relaxing.",
+    },
   ],
   disclaimer:
     "The therapies offered at QR Health are complementary in nature and are not intended to replace any medications, treatments, or advice prescribed by a medical doctor. Please continue to follow guidance from your GP or healthcare provider alongside any treatment received here. If you have a medical condition, are pregnant, or are currently undergoing medical treatment, please inform your practitioner prior to booking.",
